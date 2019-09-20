@@ -29,4 +29,39 @@ describe("users", () => {
         });
     });
   });
+
+  describe("POST /api/auth/login", () => {
+    it("returns status 201", async () => {
+      // registers and confirms new user exists
+      let newUser = await request(server)
+        .post("/api/auth/register")
+        .send({ username: "tony", password: "stark" });
+
+      expect(newUser.status).toBe(201);
+
+      // logs in user and confirms successful login
+      let loggedIn = await request(server)
+        .post("/api/auth/login")
+        .send({ username: "tony", password: "stark" });
+
+      expect(loggedIn.status).toBe(200);
+    });
+
+    it("returns token for logged in user", async () => {
+      // registers and confirms new user exists
+      let newUser = await request(server)
+        .post("/api/auth/register")
+        .send({ username: "tony", password: "stark" });
+
+      expect(newUser.status).toBe(201);
+
+      // logs in user and confirms successful login
+      let loggedIn = await request(server)
+        .post("/api/auth/login")
+        .send({ username: "tony", password: "stark" });
+
+      expect(loggedIn.status).toBe(200);
+      expect(loggedIn.body.token).toBeTruthy();
+    });
+  });
 });
